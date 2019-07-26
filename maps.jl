@@ -6,14 +6,13 @@ using StatsBase
 using CSV
 using DataFrames
 using Statistics
-using SimpleSDMLayers
 
 cd("/Users/kiristern/Documents/GitHub/SDM/")
-include("../BioClim/lib/SDMLayer.jl")
-include("../BioClim/lib/gdal.jl")
-include("../BioClim/lib/worldclim.jl")
-include("../BioClim/lib/bioclim.jl")
-include("../BioClim/lib/shapefiles.jl")
+include("../BioClim/src/lib/SDMLayer.jl")
+include("../BioClim/src/lib/gdal.jl")
+include("../BioClim/src/lib/worldclim.jl")
+include("../BioClim/src/lib/bioclim.jl")
+include("../BioClim/src/lib/shapefiles.jl")
 include("explo_fnc.jl")
 
 # Import CSV file
@@ -62,7 +61,8 @@ cd("/Users/kiristern/Documents/GitHub/BioClim/")
 @time prediction = reduce(minimum, predictions);
 # Get the threshold for NaN given a percentile
 @info "Threshold estimation"
-@time threshold = first(quantile(prediction[df], [0.05]))
+pred_noNaN = replace(prediction[df], NaN => missing)
+@time threshold = first(quantile(skipmissing(pred_noNaN), [0.05]))
 @info "5% threshold:\t$(round(threshold; digits=3))"
 # Filter the predictions based on the threshold
 @info "Final prediction filtering"
