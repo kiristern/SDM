@@ -1,18 +1,26 @@
 using CSV
 using DataFrames
 
-cd("/Users/kiristern/Documents/GitHub/SDM/data/preds_csv/originals/")
+cd("/Users/kiristern/Documents/GitHub/SDM/data/prey_csv")
 
-# Import and read all saved GBIF csv files in directory
+# Import and read all saved GBIF csv files from directory
 file_list = readdir()
+#remove .DS_Store
+file_list = file_list[2:end]
+#create an empty array of dimension Any
 files = Any[]
+#fill array with data from downloaded csv files
 for i in 1:length(file_list)
+    #see which data file is causing the error problems
+    global j = i
+    #push! into files, info from file_list
     push!(files, CSV.read(file_list[i], delim="\t"))
 end
 #create one dataframe
-predators = vcat(files...)
+prey = vcat(files...)
+
 # Select specific columns only
-df = predators[:, [:species, :infraspecificEpithet, :taxonRank, :decimalLatitude, :decimalLongitude, :year]]
+df = prey[:, [:class, :family, :genus, :species, :infraspecificEpithet, :taxonRank, :decimalLatitude, :decimalLongitude, :year]]
 # create new column "new_sp" for subspecies naming
 df.new_sp = copy(df.species)
 for i in 1:length(df)
@@ -22,4 +30,4 @@ for i in 1:length(df)
 end
 
 #save csv file
-CSV.write("predators_onedf.csv", df)
+CSV.write("prey_onedf.csv", df)
