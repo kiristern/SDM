@@ -5,21 +5,21 @@ using StatsBase
 using CSV
 using DataFrames
 using Statistics
+using GBIF
 
 cd("/Users/kiristern/Documents/GitHub/SDM")
-include("../BioClim/lib/SDMLayer.jl")
-include("../BioClim/lib/gdal.jl")
-include("../BioClim/lib/worldclim.jl")
-include("../BioClim/lib/bioclim.jl")
-include("../BioClim/lib/shapefiles.jl")
+include("../BioClim/src/lib/SDMLayer.jl")
+include("../BioClim/src/lib/gdal.jl")
+include("../BioClim/src/lib/worldclim.jl")
+include("../BioClim/src/lib/bioclim.jl")
+include("../BioClim/src/lib/shapefiles.jl")
 include("explo_fnc.jl")
 
-df = CSV.read("../SDM/data/.csv", header=true, delim="\t")
+# Import csv file
+df = CSV.read("data/prey_csv/prey_onedf.csv", header=true)
 
-df = df[:, [:species, :infraspecificEpithet, :taxonRank, :decimalLatitude, :decimalLongitude, :year]]
-df.new_sp = copy(df.species)
-for i in 1:length(df)
-    if df.taxonRank[i] == "SUBSPECIES"
-        df.new_sp[i] = string(df.species[i], "_", df.infraspecificEpithet[i])
-    end
-end
+# prepare data according to explo_fnc function
+df = prepare_csvdata(df)
+
+#remove rows with missing latitude, longitude, and year
+df = dropmissing(df, [:latitude, :longitude, :year])
