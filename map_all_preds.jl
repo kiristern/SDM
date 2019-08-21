@@ -7,15 +7,15 @@ using CSV
 using DataFrames
 
 cd("/Users/kiristern/Documents/GitHub/SDM/")
-include("../BioClim/lib/SDMLayer.jl")
-include("../BioClim/lib/gdal.jl")
-include("../BioClim/lib/worldclim.jl")
-include("../BioClim/lib/bioclim.jl")
-include("../BioClim/lib/shapefiles.jl")
+include("../BioClim/src/lib/SDMLayer.jl")
+include("../BioClim/src/lib/gdal.jl")
+include("../BioClim/src/lib/worldclim.jl")
+include("../BioClim/src/lib/bioclim.jl")
+include("../BioClim/src/lib/shapefiles.jl")
 include("explo_fnc.jl")
 
 # Import csv file
-df = CSV.read("data/preds_csv/predators_onedf.csv", header=true)
+df = CSV.read("data/preds/predators_onedf.csv", header=true)
 
 # prepare data according to explo_fnc function
 df = prepare_csvdata(df)
