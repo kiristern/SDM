@@ -4,7 +4,6 @@ using JLD2
 include("../BioClim/src/required.jl")
 
 ## Get & prepare data
-## Get & prepare data
 @time @everywhere begin
     # Load data from CSV files
     df = CSV.read("/Users/kiristern/Documents/GitHub/SDM/data/pred_prey/Puma_concolor.csv", header=true)
@@ -12,15 +11,7 @@ include("../BioClim/src/required.jl")
     df = prepare_gbif_data(df)
     # Separate species
     taxa_occ = [df[df.species .== u,:] for u in unique(df.species)]
-    #
-    # # Define coordinates range
-    # lon_range = (-145.0, -50.0)
-    # lat_range = (20.0, 75.0)
 end
-
-# ## Get the worldclim data
-# @time wc_vars = pmap(x -> worldclim(x), 1:19);
-# temp = wc_vars[1]
 
 ## Load predictions
 @load "../SDM/data/predictions.jld2" predictions
@@ -60,7 +51,7 @@ function expand_layers(layers::Array{SDMLayer{Float64},1})
         newgrid = fill(NaN, length(lats_newlayers), length(lons_newlayers))
         # Fill in original values
         newgrid[(m_lat:M_lat), (m_lon:M_lon)] .= layers[i].grid
-        #
+        # Convert to SDMLayer
         newlayer = SDMLayer(newgrid, min_lon, max_lon, min_lat, max_lat)
         # Export result
         push!(newlayers, newlayer)
@@ -71,8 +62,6 @@ end
 @time newlayers = expand_layers(layers)
 
 #find probability of species occuring together
-##create vector of ones
-# probs = ones(size(newlayers[1]))
 probs = copy(newlayers[1].grid)
 for j in 2:length(newlayers)
     for k in 1:length(newlayers[1].grid)
@@ -88,41 +77,9 @@ presence = probs .== newlayers[1].grid
 #if no change, change to NaN
 probs[presence] .= NaN
 
-##check if there are values other than 1.0
-# filter(!isone, probs)
-##change all 1.0 values to NaN
-# replace!(probs, 1.0 .=> NaN)
-
 filter(!isnan, probs)
 
 # Convert to SDMLayer
 test = SDMLayer(probs, newlayers[1].left, newlayers[1].right, newlayers[1].bottom, newlayers[1].top)
 
 plot_test = plotSDM(test)
-
-
-#### Overlay species maps
-# Plot result
-plotp1 = plotSDM(pred)
-plotp2 = plotSDM(prey1)
-plotn1 = plotSDM(newlayers[1])
-plotn2 = plotSDM(newlayers[2])
-plotn3 = plotSDM(newlayers[3])
-
-# Combine heatmaps
-sdm_plot = plotSDM(newlayers[1])
-heatmap!(
-    sdm_plot,
-    longitudes(newlayers[3]), latitudes(newlayers[3]), # layer range
-    newlayers[3].grid, # evenness values
-    c=:viridis, # ~color palette
-    clim=(0.0, maximum(filter(!isnan, newlayers[3].grid)))) # colorbar limits
-
-# plot!(
-#     sdm_plot,
-#     xlims=(pred.left, pred.right),
-#     ylims=(pred.bottom, pred.top),
-#     aspectratio=92.60/60.75
-# )
-# Compare to p2
-plotp1
