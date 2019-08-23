@@ -71,6 +71,7 @@ end
 @time newlayers = expand_layers(layers)
 
 #find probability of species occuring together
+##create vector of ones
 # probs = ones(size(newlayers[1]))
 probs = copy(newlayers[1].grid)
 for j in 2:length(newlayers)
@@ -82,11 +83,14 @@ for j in 2:length(newlayers)
 end
 probs
 
+#check if probability of occurence changed (thus overlap in species occurence)
 presence = probs .== newlayers[1].grid
+#if no change, change to NaN
 probs[presence] .= NaN
-#check if there are values other than 1.0
+
+##check if there are values other than 1.0
 # filter(!isone, probs)
-# #change all 1.0 values to NaN
+##change all 1.0 values to NaN
 # replace!(probs, 1.0 .=> NaN)
 
 filter(!isnan, probs)
@@ -94,9 +98,10 @@ filter(!isnan, probs)
 # Convert to SDMLayer
 test = SDMLayer(probs, newlayers[1].left, newlayers[1].right, newlayers[1].bottom, newlayers[1].top)
 
-
 plot_test = plotSDM(test)
 
+
+#### Overlay species maps
 # Plot result
 plotp1 = plotSDM(pred)
 plotp2 = plotSDM(prey1)
@@ -121,6 +126,3 @@ heatmap!(
 # )
 # Compare to p2
 plotp1
-
-#probability of species overlap
-prob = pred .* prey1
