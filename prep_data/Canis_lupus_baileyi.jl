@@ -1,43 +1,39 @@
-using Plots
-using GDAL
-using Shapefile
-using GBIF
-using StatsBase
-using CSV
-using DataFrames
-using Statistics
-
-cd("/Users/kiristern/Documents/GitHub/SDM/")
-include("../BioClim/src/lib/SDMLayer.jl")
-include("../BioClim/src/lib/gdal.jl")
-include("../BioClim/src/lib/worldclim.jl")
-include("../BioClim/src/lib/bioclim.jl")
-include("../BioClim/src/lib/shapefiles.jl")
-include("explo_fnc.jl")
+@time @everywhere include("../BioClim/src/required.jl")
 
 # Import CSV file
-sp_table = CSV.read("data/preds/originals/0010800-190621201848488.csv")
-## View sp_table in consol: values(sp_table)
+sp_table = CSV.read("Canis_lupus_baileyi.csv")
+
 # select only scientificName, decimalLatitude, decimalLongitude, and year
 sp_table = sp_table[:, [:species, :infraspecificEpithet, :taxonRank,
                         :decimalLatitude, :decimalLongitude, :year]]
-## if subspecies, specify in new_sp name
-sp_table.new_sp = copy(sp_table.species)
+# create new column copying all info from species col
+sp_table.new_name = copy(sp_table.species)
+# replace spaces by "_"
+sp_table.new_name .= replace.(sp_table.new_name, " " .=> "_")
+# if subspecies, specify in new_name column
 for i in 1:length(sp_table)
     if sp_table.taxonRank[i] == "SUBSPECIES"
-        sp_table.new_sp[i] = string(sp_table.species[i], "_", sp_table.infraspecificEpithet[i])
+        sp_table.new_name[i] = string(sp_table.species[i], "_", sp_table.infraspecificEpithet[i])
     end
 end
 
-# merge two columns
-# sp_table.new_sp = sp_table[:species] .* "_" .* sp_table[:infraspecificEpithet]
+# Subset with specific columns
+df = sp_table[:, [:new_name, :year, :decimalLatitude, :decimalLongitude]]
+# Rename coordinate names
+rename!(df, :decimalLatitude => :latitude)
+rename!(df, :decimalLongitude => :longitude)
+rename!(df, :new_name => :species)
+# Replace spaces by underscores in species names
+df.species .= replace.(df.species, " " .=> "_")
+# Remove entries with missing year, latitude and lontitude
+dropmissing!(df, [:year, :latitude, :longitude])
 
 # Get number of observatons per species/subspecies
-# newdf = by(df, :new_sp, n = :new_sp => length)
-# show(sort(newdf, order(:new_sp)), allrows=true)
-#
-# # Show result for subspecies observations
-# show(sp_table[sp_table.taxonRank .== "SUBSPECIES", [:species, :infraspecificEpithet, :new_sp]], allrows=true)
+newdf = by(df, :species, n = :species => length)
+show(sort(newdf, order(:species)), allrows=true)
+
+# Show result for subspecies observations
+show(sp_table[sp_table.taxonRank .== "SUBSPECIES", [:species, :infraspecificEpithet, :new_name]], allrows=true)
 
 # # select only occurences with included year date
 # sp_table = sp_table[sp_table.year .!= "NA", :]
@@ -45,7 +41,7 @@ end
 # sp_table.year = parse.(Int64, sp_table.year)
 
 # Prepare csv data using fnc
-df = prepare_csvdata(sp_table)
+# df = prepare_csvdata(sp_table)
 
 ## From Tim's BioClim/main.jl
 # Get the worldclim data by their layer number
