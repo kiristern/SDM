@@ -6,8 +6,8 @@ cd("/Users/kiristern/Documents/GitHub/SDM")
 ## Get & prepare data
 @time @everywhere begin
     # Load data from CSV files
-    # df = CSV.read("/Users/kiristern/Documents/GitHub/SDM/data/pred_prey/Puma_concolor.csv", header=true)
-    # Prepare data (select columns, arrange values)
+    df = CSV.read("/Users/kiristern/Documents/GitHub/SDM/data/pred_prey/Vulpes_vulpes_sp.csv", header=true)
+     # Prepare data (select columns, arrange values)
     df = prepare_gbif_data(pred_prey)
     # Separate species
     taxa_occ = [df[df.species .== u,:] for u in unique(df.species)]
@@ -317,4 +317,4 @@ predictions = [prediction1, prediction2, prediction3, prediction4, prediction5,
 @save "data/predictions_vulpes_vulpes.jld2" predictions
 
 # Test import
-@load "data/predictions.jld2" predictions
+@load "data/predictions_vulpes_vulpes.jld2" predictions
