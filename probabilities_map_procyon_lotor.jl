@@ -100,7 +100,8 @@ savefig("../SDM/figures/sdm_map-Procyon_lotor_predictions_title.pdf")
 
 
 
-#save sp individual maps
+##save individual maps
+#map preds
 worldmap = clip(worldshape(50), pred)
 
 sdm_plot = plot([0.0], lab = " ", msw = 0.0, ms = 0.0, size = (900, 450), frame=:box,
@@ -130,7 +131,7 @@ savefig("../SDM/figures/sdm_map-Procyon_lotor.pdf")
 
 
 
-#save for preys
+#map prey[x]
 worldmap = clip(worldshape(50), p7)
 
 sdm_plot = plot([0.0], lab = " ", msw = 0.0, ms = 0.0, size = (900, 450), frame=:box,
