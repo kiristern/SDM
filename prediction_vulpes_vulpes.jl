@@ -6,11 +6,14 @@ cd("/Users/kiristern/Documents/GitHub/SDM")
 ## Get & prepare data
 @time @everywhere begin
     # Load data from CSV files
-    df = CSV.read("/Users/kiristern/Documents/GitHub/SDM/data/pred_prey/Vulpes_vulpes_sp.csv", header=true)
+    pred_prey = CSV.read("/Users/kiristern/Documents/GitHub/SDM/data/pred_prey/Vulpes_vulpes_sp.csv", header=true)
      # Prepare data (select columns, arrange values)
     df = prepare_gbif_data(pred_prey)
     # Separate species
     taxa_occ = [df[df.species .== u,:] for u in unique(df.species)]
+    #define coordinate range
+    long_range = (-180.0, -46.0)
+    lat_range = (-90.0, 90.0)
 end
 
 # convert year "string" to "integer"
@@ -21,7 +24,7 @@ cd("/Users/kiristern/Documents/GitHub/BioClim/")
 
 #prediction pred
 @info "Extract and crop bioclim variables"
-@time wc_vars = [clip(worldclim(i), taxa_occ[1]) for i in 1:19];
+@time wc_vars = [clip(worldclim(i)[long_range, lat_range],  taxa_occ[1]) for i in 1:19];
 # Make the prediction for each layer
 @info "Predictions for each layer"
 @time predictions = [bioclim(wc_vars[i], taxa_occ[1]) for i in 1:length(wc_vars)];
@@ -40,7 +43,7 @@ end
 
 #prediction prey1
 @info "Extract and crop bioclim variables"
-@time wc_vars = [clip(worldclim(i), taxa_occ[2]) for i in 1:19];
+@time wc_vars = [clip(worldclim(i)[long_range, lat_range], taxa_occ[2]) for i in 1:19];
 # Make the prediction for each layer
 @info "Predictions for each layer"
 @time predictions = [bioclim(wc_vars[i], taxa_occ[2]) for i in 1:length(wc_vars)];
@@ -58,7 +61,7 @@ end
 end
 
 @info "Extract and crop bioclim variables"
-@time wc_vars = [clip(worldclim(i), taxa_occ[3]) for i in 1:19];
+@time wc_vars = [clip(worldclim(i)[long_range, lat_range], taxa_occ[3]) for i in 1:19];
 # Make the prediction for each layer
 @info "Predictions for each layer"
 @time predictions = [bioclim(wc_vars[i], taxa_occ[3]) for i in 1:length(wc_vars)];
@@ -76,7 +79,7 @@ end
 end
 
 @info "Extract and crop bioclim variables"
-@time wc_vars = [clip(worldclim(i), taxa_occ[4]) for i in 1:19];
+@time wc_vars = [clip(worldclim(i)[long_range, lat_range], taxa_occ[4]) for i in 1:19];
 # Make the prediction for each layer
 @info "Predictions for each layer"
 @time predictions = [bioclim(wc_vars[i], taxa_occ[4]) for i in 1:length(wc_vars)];
@@ -94,7 +97,7 @@ end
 end
 
 @info "Extract and crop bioclim variables"
-@time wc_vars = [clip(worldclim(i), taxa_occ[5]) for i in 1:19];
+@time wc_vars = [clip(worldclim(i)[long_range, lat_range], taxa_occ[5]) for i in 1:19];
 # Make the prediction for each layer
 @info "Predictions for each layer"
 @time predictions = [bioclim(wc_vars[i], taxa_occ[5]) for i in 1:length(wc_vars)];
@@ -112,7 +115,7 @@ end
 end
 
 @info "Extract and crop bioclim variables"
-@time wc_vars = [clip(worldclim(i), taxa_occ[6]) for i in 1:19];
+@time wc_vars = [clip(worldclim(i)[long_range, lat_range], taxa_occ[6]) for i in 1:19];
 # Make the prediction for each layer
 @info "Predictions for each layer"
 @time predictions = [bioclim(wc_vars[i], taxa_occ[6]) for i in 1:length(wc_vars)];
@@ -130,7 +133,7 @@ end
 end
 
 @info "Extract and crop bioclim variables"
-@time wc_vars = [clip(worldclim(i), taxa_occ[7]) for i in 1:19];
+@time wc_vars = [clip(worldclim(i)[long_range, lat_range], taxa_occ[7]) for i in 1:19];
 # Make the prediction for each layer
 @info "Predictions for each layer"
 @time predictions = [bioclim(wc_vars[i], taxa_occ[7]) for i in 1:length(wc_vars)];
@@ -148,7 +151,7 @@ end
 end
 
 @info "Extract and crop bioclim variables"
-@time wc_vars = [clip(worldclim(i), taxa_occ[8]) for i in 1:19];
+@time wc_vars = [clip(worldclim(i)[long_range, lat_range], taxa_occ[8]) for i in 1:19];
 # Make the prediction for each layer
 @info "Predictions for each layer"
 @time predictions = [bioclim(wc_vars[i], taxa_occ[8]) for i in 1:length(wc_vars)];
@@ -166,7 +169,7 @@ end
 end
 
 @info "Extract and crop bioclim variables"
-@time wc_vars = [clip(worldclim(i), taxa_occ[9]) for i in 1:19];
+@time wc_vars = [clip(worldclim(i)[long_range, lat_range], taxa_occ[9]) for i in 1:19];
 # Make the prediction for each layer
 @info "Predictions for each layer"
 @time predictions = [bioclim(wc_vars[i], taxa_occ[9]) for i in 1:length(wc_vars)];
@@ -184,7 +187,7 @@ end
 end
 
 @info "Extract and crop bioclim variables"
-@time wc_vars = [clip(worldclim(i), taxa_occ[10]) for i in 1:19];
+@time wc_vars = [clip(worldclim(i)[long_range, lat_range], taxa_occ[10]) for i in 1:19];
 # Make the prediction for each layer
 @info "Predictions for each layer"
 @time predictions = [bioclim(wc_vars[i], taxa_occ[10]) for i in 1:length(wc_vars)];
@@ -202,7 +205,7 @@ end
 end
 
 @info "Extract and crop bioclim variables"
-@time wc_vars = [clip(worldclim(i), taxa_occ[11]) for i in 1:19];
+@time wc_vars = [clip(worldclim(i)[long_range, lat_range], taxa_occ[11]) for i in 1:19];
 # Make the prediction for each layer
 @info "Predictions for each layer"
 @time predictions = [bioclim(wc_vars[i], taxa_occ[11]) for i in 1:length(wc_vars)];
@@ -220,7 +223,7 @@ end
 end
 
 @info "Extract and crop bioclim variables"
-@time wc_vars = [clip(worldclim(i), taxa_occ[12]) for i in 1:19];
+@time wc_vars = [clip(worldclim(i)[long_range, lat_range], taxa_occ[12]) for i in 1:19];
 # Make the prediction for each layer
 @info "Predictions for each layer"
 @time predictions = [bioclim(wc_vars[i], taxa_occ[12]) for i in 1:length(wc_vars)];
@@ -238,7 +241,7 @@ end
 end
 
 @info "Extract and crop bioclim variables"
-@time wc_vars = [clip(worldclim(i), taxa_occ[13]) for i in 1:19];
+@time wc_vars = [clip(worldclim(i)[long_range, lat_range], taxa_occ[13]) for i in 1:19];
 # Make the prediction for each layer
 @info "Predictions for each layer"
 @time predictions = [bioclim(wc_vars[i], taxa_occ[13]) for i in 1:length(wc_vars)];
@@ -256,7 +259,7 @@ end
 end
 
 @info "Extract and crop bioclim variables"
-@time wc_vars = [clip(worldclim(i), taxa_occ[14]) for i in 1:19];
+@time wc_vars = [clip(worldclim(i)[long_range, lat_range], taxa_occ[14]) for i in 1:19];
 # Make the prediction for each layer
 @info "Predictions for each layer"
 @time predictions = [bioclim(wc_vars[i], taxa_occ[14]) for i in 1:length(wc_vars)];
@@ -274,7 +277,7 @@ end
 end
 
 @info "Extract and crop bioclim variables"
-@time wc_vars = [clip(worldclim(i), taxa_occ[15]) for i in 1:19];
+@time wc_vars = [clip(worldclim(i)[long_range, lat_range], taxa_occ[15]) for i in 1:19];
 # Make the prediction for each layer
 @info "Predictions for each layer"
 @time predictions = [bioclim(wc_vars[i], taxa_occ[15]) for i in 1:length(wc_vars)];
@@ -292,7 +295,7 @@ end
 end
 
 @info "Extract and crop bioclim variables"
-@time wc_vars = [clip(worldclim(i), taxa_occ[16]) for i in 1:19];
+@time wc_vars = [clip(worldclim(i)[long_range, lat_range], taxa_occ[16]) for i in 1:19];
 # Make the prediction for each layer
 @info "Predictions for each layer"
 @time predictions = [bioclim(wc_vars[i], taxa_occ[16]) for i in 1:length(wc_vars)];
