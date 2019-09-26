@@ -12,10 +12,10 @@ cd("/Users/kiristern/Documents/GitHub/SDM")
     df = prepare_gbif_data(pred_prey)
     # Separate species
     taxa_occ = [df[df.species .== u,:] for u in unique(df.species)]
-    #define predator coordinate range
+    #define predator coordinate range using min/max ranges
     long_predator = extrema(taxa_occ[1].longitude)
     lat_predator = extrema(taxa_occ[1].latitude)
-    #define coordinate range for all species
+    #define coordinate range for all species using min/max ranges
     long_all = extrema(df.longitude)
     lat_all = extrema(df.latitude)
 end
