@@ -17,7 +17,7 @@ p5 = CSV.read("data/prey_sp/Chorthippus_montanus.csv", delim="\t")
 
 p6 = CSV.read("data/prey_sp/Staphylinus_erythropterus.csv", delim="\t")
 
-p7 = CSV.read("data/prey_sp/Conocephalus_dorsalis.csv", delim="\t")
+p7 = CSV.read("data/prey_sp/Conocephalus_fuscus.csv", delim="\t")
 
 p8 = CSV.read("data/prey_sp/Rana_temporaria.csv", delim="\t")
 #cannot convert "missing" values to Float64, so must dropmissing first
@@ -49,7 +49,6 @@ pred_prey = select(pred_prey, [:species, :decimalLatitude, :decimalLongitude, :y
 pred_prey = dropmissing!(pred_prey, [:decimalLatitude, :decimalLongitude, :year])
 pred_prey.decimalLongitude = parse.(Float64, pred_prey.decimalLongitude)
 
-
-CSV.write("data/pred_prey/Procyon_lotor.csv", pred_prey)
+CSV.write("data/pred_prey/vulpes_vulpes_america.csv", pred_prey)
 
 show(by(pred_prey, :species, :species => length), allcols=true)

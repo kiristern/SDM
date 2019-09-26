@@ -31,7 +31,7 @@ filter(!isnan, probs)
 map_layer = SDMLayer(probs, newlayers[1].left, newlayers[1].right, newlayers[1].bottom, newlayers[1].top)
 
 plot_layer = plotSDM(map_layer)
-plot_layer = plot!(title="Probability of Occurence: Vulpes vulpes")
+plot_layer = plot!(title="Probability of species overlap: vulpes vulpes")
 plot_layer
 
-savefig("../SDM/figures/sdm_map-Procyon_lotor_probability_title.pdf")
+savefig("../SDM/figures/sdm_map-vulpes_probability_america.pdf")

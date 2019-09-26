@@ -6,9 +6,9 @@ include("../BioClim/src/required.jl")
 ## Get & prepare data
 @time @everywhere begin
     # Load data from CSV files
-    df = CSV.read("/Users/kiristern/Documents/GitHub/SDM/data/pred_prey/Vulpes_vulpes_sp.csv", header=true)
+    pred_prey = CSV.read("/Users/kiristern/Documents/GitHub/SDM/data/pred_prey/Vulpes_vulpes_sp.csv", header=true)
     # Prepare data (select columns, arrange values)
-    #df = prepare_gbif_data(pred_prey)
+    df = prepare_gbif_data(pred_prey)
     ## no need to import dataframe since already in workspace under pred_prey
     ##df = pred_prey
     # Separate species

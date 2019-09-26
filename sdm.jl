@@ -1,5 +1,5 @@
 using Distributed
-addprocs(9)
+
 
 @time @everywhere include("../BioClim/src/required.jl")
 
@@ -46,7 +46,7 @@ end
 ## Plot results
 sdm_plot = plotSDM(predict_SDM)
 
-## custumn heatmap colour gradient
+## custom heatmap colour gradient
 heatmap!(
     sdm_plot,
     longitudes(prediction), latitudes(prediction), prediction.grid,

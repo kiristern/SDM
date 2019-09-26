@@ -24,4 +24,4 @@ end
 @time all_predictions = pmap(x -> species_bclim(x, wc_vars), warblers_occ);
 
 ## Export predictions
-@save "../data/all_predictions_vulpes_vulpes.jld2" all_predictions
+@save "../data/all_predictions_vulpes_vulpes_world.jld2" all_predictions
