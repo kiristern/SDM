@@ -2,10 +2,11 @@ using Distributed
 using JLD2
 
 include("../BioClim/src/required.jl")
-include("expandlayers_vulpes_vulpes.jl")
+# include("expandlayers_vulpes_vulpes.jl")
 
 taxa_occ[2]
 
+#using new_predictions from north america only
 newlayers = new_predictions
 
 #create empty array
@@ -73,8 +74,8 @@ sum_on_pred = replace(sum_on_pred, 0 => NaN)
 sum_lay_pred = SDMLayer(sum_on_pred, newlayers[1].left, newlayers[1].right, newlayers[1].bottom, newlayers[1].top)
 
 plot_sum_on_pred = plotSDM(sum_lay_pred)
-plot_sum_on_pred = plot!(title="All species overlap")
-savefig("../SDM/figures/vulpes_vulpes/sdm_map-all_overlap_world.pdf")
+plot_sum_on_pred = plot!(title="Presence map: vulpes vulpes")
+savefig("../SDM/figures/vulpes_vulpes/sdm_map-vulpes_northamerica.pdf")
 
 #crop to americas range only
 long_range = (-180.0, -46.0)
@@ -85,3 +86,23 @@ sum_lay_Am = sum_lay_pred[long_range, lat_range]
 plot_am = plotSDM(sum_lay_Am)
 plot_am = plot!(title="All species overlap")
 savefig("../SDM/figures/vulpes_vulpes/sdm_map-vulpes_vulpes_america.pdf")
+
+###############################
+###plot individual sp map
+taxa_occ[4]
+
+plot1 = plotSDM(new_predictions[1])
+plot1 = plot!(title="Vulpes vulpes")
+savefig("../SDM/figures/vulpes_vulpes/sdm_map-vulpes_vulpes_newpredictions.pdf")
+
+plot2 = plotSDM(new_predictions[2])
+plot2 = plot!(title="Cynomys ludovicianus")
+savefig("../SDM/figures/vulpes_vulpes/sdm_map-cynomys_ludovicianus.pdf")
+
+plot3 = plotSDM(new_predictions[3])
+plot3 = plot!(title="Tetrix subulata")
+savefig("../SDM/figures/vulpes_vulpes/sdm_map-tetrix_subulata.pdf")
+
+plot4 = plotSDM(new_predictions[4])
+plot4 = plot!(title="Lepus europaeus")
+savefig("../SDM/figures/vulpes_vulpes/sdm_map-lepus_europaeus.pdf")
