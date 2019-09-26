@@ -6,12 +6,14 @@ include("expandlayers_vulpes_vulpes.jl")
 
 taxa_occ[2]
 
+newlayers = new_predictions
+
 #create empty array
 presence_all = []
 # fill pred/prey pp_presence matrix with binary values (1 if present, 0 if not)
 @time for i in 1:length(newlayers)     # iterate through all species
     # create new empty matrix for predator presence, dimensions of predator newlayers[1]
-        pp_presence = zeros(Int64, 2031, 4223)
+        pp_presence = zeros(Int64, size(newlayers[1]))
         for j in 1:length(newlayers[1].grid)   # iterate through all coordinates
             if isnan(newlayers[i][j])
                 pp_presence[j] = 0
@@ -27,22 +29,7 @@ presence_all
 sum_all = copy(presence_all[1])
 #add arrays to pred array
 for k in 2:length(presence_all)
-    #only add where predator species is present
-    #if presence_all[1][k] == 1
-        sum_all .+= presence_all[k]
-    end
-end
-
-
-##get sum
-sum_all_test = copy(presence_all[1])
-#add arrays to pred array
-for k in 2:length(presence_all)
-    sum_all_test = copy(presence_all[1])
-    #only add where predator species is present
-    if presence_all[1][k] == 1
-        sum_all_test = sum_all_test .+ presence_all[k]
-    end
+    sum_all .+= presence_all[k]
 end
 
 #replace zeros to NaN
@@ -52,6 +39,8 @@ sum_all = replace(sum_all, 0 => NaN)
 sum_lay = SDMLayer(sum_all, newlayers[1].left, newlayers[1].right, newlayers[1].bottom, newlayers[1].top)
 
 plot_sum = plotSDM(sum_lay)
+plot_sum = plot!(title="All species overlap")
+
 
 #crop to americas range only
 long_range = (-180.0, -46.0)
@@ -60,3 +49,39 @@ lat_range = (-90.0, 90.0)
 sum_lay_Am = sum_lay[long_range, lat_range]
 
 plot_am = plotSDM(sum_lay_Am)
+plot_sum = plot!(title="All species overlap")
+
+
+
+#####################
+##get sum where only predator is present
+sum_on_pred = copy(presence_all[1])
+#add arrays to pred array
+for k in 2:length(presence_all)
+    for j in 1:length(presence_all[1])
+    #only add where predator species is present
+         if presence_all[1][j] == 1
+            sum_on_pred[j] = sum_on_pred[j] .+ presence_all[k][j]
+        end
+    end
+end
+
+#replace zeros to NaN
+sum_on_pred = replace(sum_on_pred, 0 => NaN)
+
+#save as SDMLayer
+sum_lay_pred = SDMLayer(sum_on_pred, newlayers[1].left, newlayers[1].right, newlayers[1].bottom, newlayers[1].top)
+
+plot_sum_on_pred = plotSDM(sum_lay_pred)
+plot_sum_on_pred = plot!(title="All species overlap")
+savefig("../SDM/figures/vulpes_vulpes/sdm_map-all_overlap_world.pdf")
+
+#crop to americas range only
+long_range = (-180.0, -46.0)
+lat_range = (-90.0, 90.0)
+#specify the range of sum_lay_pred
+sum_lay_Am = sum_lay_pred[long_range, lat_range]
+
+plot_am = plotSDM(sum_lay_Am)
+plot_am = plot!(title="All species overlap")
+savefig("../SDM/figures/vulpes_vulpes/sdm_map-vulpes_vulpes_america.pdf")
